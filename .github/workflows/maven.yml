@@ -22,14 +22,9 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
-      - name: Build with Maven
-        run: mvn clean package
-      - name: Trigger Jenkins
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.PORT }}
-          script: |
-            curl -s "http://localhost:8080/job/TomcatDeployment/build?token=github-trigger"
+          - name: Trigger Jenkins
+  run: |
+    echo "${{ secrets.SSH_KEY }}" | base64 -d > /tmp/github_actions_key
+    chmod 600 /tmp/github_actions_key
+    ssh -o StrictHostKeyChecking=no -i /tmp/github_actions_key -p "${{ secrets.PORT }}" "${{ secrets.USERNAME }}@${{ secrets.HOST }}" 'curl -s "http://localhost:8080/job/TomcatDeployment/build?token=github-trigger"'
+    rm -f /tmp/github_actions_key
