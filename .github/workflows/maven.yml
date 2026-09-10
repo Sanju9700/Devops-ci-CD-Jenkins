@@ -24,8 +24,4 @@ jobs:
           cache: maven
       - name: Trigger Jenkins 
         run: |
-           echo "${{ secrets.SSH_KEY }}" | base64 -d > /tmp/github_actions_key
-             chmod 600 /tmp/github_actions_key
-                                          ssh -o StrictHostKeyChecking=no -i /tmp/github_actions_key -p "${{ secrets.PORT }}" "${{ secrets.USERNAME }}@${{ secrets.HOST }}" 'curl -s "http://localhost:8080/job/TomcatDeployment/build?token=github-trigger"'
-                                                                                  rm -f /tmp/github_actions_key
-      
+            curl -s "http://localhost:8080/job/TomcatDeployment/build?token=github-trigger"
