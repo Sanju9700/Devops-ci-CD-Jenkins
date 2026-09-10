@@ -24,4 +24,4 @@ jobs:
           cache: maven
       - name: Trigger Jenkins 
         run: |
-            curl -s "http://localhost:8080/job/TomcatDeployment/build?token=github-trigger"
+            curl -s -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_TOKEN }}" "http://localhost:8080/job/TomcatDeployment/build?token=github-trigger"
